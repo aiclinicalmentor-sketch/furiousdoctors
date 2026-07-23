@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026 Ebola outbreak trajectory in DRC</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --fg: #171717;
+      --muted: #5a5a5a;
+      --red: #d63a2e;
+      --line: #d8d3cc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    main {
+      min-height: 100vh;
+      padding: 46px 42px 54px;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 1180px;
+      font-size: clamp(38px, 5vw, 74px);
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 1120px;
+      margin: 18px 0 32px;
+      font-size: clamp(22px, 2.2vw, 34px);
+      line-height: 1.22;
+      font-weight: 400;
+    }
+
+    .video-wrap {
+      width: min(100%, 1360px);
+      background: var(--bg);
+      margin: 0 0 42px;
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .section-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .animation-header {
+      width: min(100%, 1360px);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 18px;
+      margin: 0 0 12px;
+    }
+
+    .play-button {
+      appearance: none;
+      border: 2px solid var(--fg);
+      background: transparent;
+      color: var(--fg);
+      border-radius: 0;
+      padding: 10px 18px;
+      min-width: 158px;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .play-button:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    footer {
+      margin-top: 44px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    @media (max-width: 760px) {
+      main {
+        padding: 24px 18px 38px;
+      }
+
+      .animation-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>2026 Ebola outbreak trajectory in DRC</h1>
+
+    <p class="lead">
+      The 2026 DRC Ebola Bundibugyo outbreak is rising faster than major outbreaks in 2014 and 2018.
+    </p>
+
+    <div class="animation-header">
+      <button class="play-button" type="button" id="playButton" aria-controls="outbreakVideo">Play animation</button>
+    </div>
+    <div class="video-wrap">
+      <video id="outbreakVideo" playsinline preload="metadata" poster="public/assets/bundibugyo/bundibugyo_still_red_black_1080p.png?v=20260723-5">
+        <source src="public/assets/bundibugyo/bundibugyo_full_65_days_1080p.mp4?v=20260723-4" type="video/mp4">
+      </video>
+    </div>
+
+    <footer>
+      Source: DRC/INSP SitRep PDFs from https://insp.cd/sitrep-n056-mvb_09-07-2026/. Latest local extraction: SitRep 68, July 21, 2026, 2,531 confirmed DRC cases.
+    </footer>
+  </main>
+  <script>
+    const video = document.getElementById("outbreakVideo");
+    const playButton = document.getElementById("playButton");
+
+    function syncPlayButton() {
+      playButton.textContent = video.paused ? "Play animation" : "Pause animation";
+    }
+
+    playButton.addEventListener("click", () => {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    });
+
+    video.addEventListener("play", syncPlayButton);
+    video.addEventListener("pause", syncPlayButton);
+    video.addEventListener("ended", syncPlayButton);
+  </script>
+</body>
+</html>
