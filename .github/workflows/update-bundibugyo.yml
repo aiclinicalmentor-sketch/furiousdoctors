@@ -1,0 +1,51 @@
+name: Update Bundibugyo SitReps
+
+on:
+  schedule:
+    - cron: "0 13 * * 1,4"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-bundibugyo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
+
+      - name: Update Bundibugyo assets
+        run: python scripts/bundibugyo/update_pipeline.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html public/assets/bundibugyo scripts/bundibugyo
+          if git diff --cached --quiet; then
+            echo "No Bundibugyo updates to commit."
+            exit 0
+          fi
+          latest_sitrep="$(python - <<'PY'
+import json
+from pathlib import Path
+summary = json.loads(Path('public/assets/bundibugyo/latest_bundibugyo_summary.json').read_text())
+print(summary.get('latest_sitrep') or 'NA')
+PY
+)"
+          git commit -m "Update Bundibugyo SitRep ${latest_sitrep} assets"
+          git push

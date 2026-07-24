@@ -1,1 +1,3 @@
 .devserver.*
+.bundibugyo_work/
+__pycache__/

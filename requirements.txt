@@ -1,0 +1,2 @@
+matplotlib==3.10.5
+pdfplumber==0.11.7
