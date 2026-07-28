@@ -3,8 +3,11 @@ from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
+import imageio_ffmpeg
 import matplotlib.pyplot as plt
 from matplotlib.animation import FFMpegWriter
+
+matplotlib.rcParams["animation.ffmpeg_path"] = imageio_ffmpeg.get_ffmpeg_exe()
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
