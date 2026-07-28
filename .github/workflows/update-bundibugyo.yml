@@ -40,12 +40,6 @@ jobs:
             echo "No Bundibugyo updates to commit."
             exit 0
           fi
-          latest_sitrep="$(python - <<'PY'
-import json
-from pathlib import Path
-summary = json.loads(Path('public/assets/bundibugyo/latest_bundibugyo_summary.json').read_text())
-print(summary.get('latest_sitrep') or 'NA')
-PY
-)"
+          latest_sitrep="$(python -c "import json; from pathlib import Path; print(json.loads(Path('public/assets/bundibugyo/latest_bundibugyo_summary.json').read_text()).get('latest_sitrep') or 'NA')")"
           git commit -m "Update Bundibugyo SitRep ${latest_sitrep} assets"
           git push
