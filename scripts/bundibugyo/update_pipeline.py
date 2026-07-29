@@ -60,6 +60,8 @@ def update_website_index(latest):
     text = index_path.read_text(encoding="utf-8")
     sitrep = latest["sitrep"] or "NA"
     report_date = latest["report_date"]
+    report_date_dt = datetime.strptime(report_date, "%Y-%m-%d")
+    report_date_label = f"{report_date_dt.strftime('%B')} {report_date_dt.day}, {report_date_dt.year}"
     version = f"{report_date.replace('-', '')}-sitrep{sitrep}"
     cases = int(latest["cumulative_confirmed_cases"])
 
@@ -74,8 +76,8 @@ def update_website_index(latest):
         updated,
     )
     updated = re.sub(
-        r"Latest local extraction: SitRep [^,]+, [^,]+, [0-9,]+ confirmed DRC cases\.",
-        f"Latest local extraction: SitRep {sitrep}, {report_date}, {cases:,} confirmed DRC cases.",
+        r"Latest local extraction: SitRep [^,]+, .*?, [0-9,]+ confirmed DRC cases\.",
+        f"Latest local extraction: SitRep {sitrep}, {report_date_label}, {cases:,} confirmed DRC cases.",
         updated,
     )
 
