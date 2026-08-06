@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-08-03T15:43:08Z",
-  "latest_report_date": "2026-08-01",
-  "latest_days_after_declaration": 78,
-  "latest_sitrep": "79",
-  "latest_cumulative_confirmed_cases": 3748,
-  "latest_source_file": "SitRep_MVE_RDC_N_079_01-08-2026.pdf",
+  "updated_at": "2026-08-06T15:13:25Z",
+  "latest_report_date": "2026-08-04",
+  "latest_days_after_declaration": 81,
+  "latest_sitrep": "82",
+  "latest_cumulative_confirmed_cases": 3973,
+  "latest_source_file": "SitRep_MVE_RDC_N_082_04_08_2026.pdf",
   "website_index_updated": true
 }
