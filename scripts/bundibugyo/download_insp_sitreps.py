@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 from urllib.parse import quote, unquote, urlparse, urlunparse
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 
 
 API_URL = "https://insp.cd/wp-json/wp/v2/posts?categories=308&per_page=100&orderby=date&order=desc"
@@ -65,6 +66,7 @@ def main():
     posts = fetch_json(API_URL)
     downloaded = []
     skipped = []
+    failed = []
 
     for post in posts:
         title = html.unescape(post.get("title", {}).get("rendered", "")).strip()
@@ -76,7 +78,13 @@ def main():
             if target.exists() and target.stat().st_size > 0:
                 skipped.append(record)
                 continue
-            data = fetch_bytes(url)
+            try:
+                data = fetch_bytes(url)
+            except (HTTPError, URLError, TimeoutError) as exc:
+                record["error"] = str(exc)
+                failed.append(record)
+                print(f"failed {filename} from {title}: {exc}")
+                continue
             target.write_bytes(data)
             downloaded.append(record)
 
@@ -84,10 +92,11 @@ def main():
         "source_api": API_URL,
         "downloaded": downloaded,
         "skipped_existing": skipped,
+        "failed": failed,
     }
     MANIFEST.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    print(f"downloaded={len(downloaded)} skipped_existing={len(skipped)} manifest={MANIFEST}")
+    print(f"downloaded={len(downloaded)} skipped_existing={len(skipped)} failed={len(failed)} manifest={MANIFEST}")
     for record in downloaded:
         print(f"downloaded {record['file']} from {record['title']}")
 

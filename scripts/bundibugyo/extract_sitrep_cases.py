@@ -46,6 +46,7 @@ def parse_filename_date(name: str):
     patterns = [
         r"(\d{2})_(\d{2})_(\d{4})",
         r"(\d{2})-(\d{2})-(\d{4})",
+        r"(?<!\d)(\d{2})(\d{2})(\d{2})(?!\d)",
         r"(\d{2})(\d{2})(\d{4})",
         r"(\d{4})(\d{2})(\d{2})",
     ]
@@ -55,6 +56,8 @@ def parse_filename_date(name: str):
             continue
         parts = match.groups()
         try:
+            if len(parts) == 3 and len(parts[2]) == 2:
+                return datetime(2000 + int(parts[2]), int(parts[1]), int(parts[0])).date()
             if len(parts[0]) == 4:
                 return datetime(int(parts[0]), int(parts[1]), int(parts[2])).date()
             return datetime(int(parts[2]), int(parts[1]), int(parts[0])).date()
