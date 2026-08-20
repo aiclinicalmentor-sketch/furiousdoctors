@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-08-17T13:36:24Z",
+  "updated_at": "2026-08-20T13:42:49Z",
   "latest_report_date": "2026-08-15",
   "latest_days_after_declaration": 92,
   "latest_sitrep": "93",
   "latest_cumulative_confirmed_cases": 4945,
   "latest_source_file": "SitRep_MVEBDB_093_15_08_2026.pdf",
-  "website_index_updated": true
+  "website_index_updated": false
 }
