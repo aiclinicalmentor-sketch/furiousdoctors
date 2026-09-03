@@ -1,5 +1,4 @@
 report_date,days_after_declaration,sitrep,cumulative_confirmed_cases,source_file
-2026-05-17,2,2,13,Sitrep_MVE-Ituri_N°-002_18-mai-2026.pdf
 2026-05-19,4,5,51,Draft_SitRep_MVE_RDC_20260520_vf1.pdf
 2026-05-20,5,,64,SitRep_MVE_RDC_20260521_editing-FV.pdf
 2026-05-21,6,7,83,SitRep_MVE_RDC_20260512-FDv2_IM.pdf
@@ -89,3 +88,5 @@ report_date,days_after_declaration,sitrep,cumulative_confirmed_cases,source_file
 2026-08-28,105,106,5945,SitRep_MVEBDB_106_28_08_2026.pdf
 2026-08-29,106,107,6041,SitRep_MVEBDB_107_29_08_2026.pdf
 2026-08-30,107,108,6100,SitRep_MVEBDB_108_30_08_2026.pdf
+2026-08-31,108,109,6186,SitRep_MVEBDB_109_31_08_2026.pdf
+2026-09-01,109,110,6250,SitRep_MVEBDB_110_01_09_2026.pdf
