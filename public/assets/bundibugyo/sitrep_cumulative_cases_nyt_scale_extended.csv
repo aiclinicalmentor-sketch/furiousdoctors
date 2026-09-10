@@ -1,6 +1,4 @@
 report_date,days_after_declaration,sitrep,cumulative_confirmed_cases,source_file
-2026-05-23,8,9,101,SitRep_MVE_RDC_2024fv1_IM.pdf
-2026-05-24,9,10,105,SitRep_MVE_RDC_NA°010_25_05_26fv_IM.pdf
 2026-05-25,10,11,106,SitRep_MVE_RDC_NA°011_IM.pdf
 2026-05-26,11,12,121,SitRep_MVE_RDC_N°012_26052026_Vf2_IM.pdf
 2026-05-27,12,13,125,SitRep_MVE_RDC_NA°013_27_05_2026_ES-IM4.pdf
@@ -90,3 +88,5 @@ report_date,days_after_declaration,sitrep,cumulative_confirmed_cases,source_file
 2026-09-03,111,112,6436,SitRep_MVEBDB_112_03_09_2026-1.pdf
 2026-09-04,112,113,6522,SitRep_MVEBDB_113_04_09_2026.pdf
 2026-09-05,113,114,6604,SitRep_MVEBDB_114_05_09_2026.pdf
+2026-09-07,115,116,6757,SitRep_MVEBDB_116_07_09_2026.pdf
+2026-09-08,116,117,6843,SitRep_MVEBDB_117_08_09_2026.pdf
