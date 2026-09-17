@@ -1,7 +1,4 @@
 report_date,days_after_declaration,sitrep,cumulative_confirmed_cases,source_file
-2026-05-29,14,15,263,Draft_SitRep_MVE_RDC_NA°015_29_05_2026.pdf
-2026-05-30,15,16,282,SitRep_MVE_RDC_N°016_31_05_2026.pdf
-2026-05-31,16,17,321,SitRep_MVE_RDC_N017_01_06_2026-Revised_JO_PA_IM-1.pdf
 2026-06-01,17,18,344,Daft-SitRep_MVE_RDC_N18_01_06_2026_JO_PA-Final-1.pdf
 2026-06-02,18,19,363,Draft-1-SitRep_MVE_RDC_N19_02_06_2026-_JO_PA-FINAL.-2.pdf
 2026-06-03,19,20,381,Draft-2-SitRep_MVE_RDC_N20_02_06_2026-_JO_PA-FINAL.pdf
@@ -90,3 +87,6 @@ report_date,days_after_declaration,sitrep,cumulative_confirmed_cases,source_file
 2026-09-10,118,119,7022,SitRep_MVEBDB_119_10_09_2026-1.pdf
 2026-09-11,119,120,7113,SitRep_MVEBDB_120_11_09_2026.pdf
 2026-09-12,120,121,7200,SitRep_MVEBDB_121_12_09_2026.pdf
+2026-09-13,121,122,7258,SitRep_MVEBDB_122_13_09_2026.pdf
+2026-09-14,122,123,7345,SitRep_MVEBDB_123_14_09_2026.pdf
+2026-09-15,123,124,7404,SitRep_MVEBDB_124_15_09_2026.pdf
