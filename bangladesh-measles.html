@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bangladesh measles - Furious Doctors</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #ffffff;
+      --fg: #1f2937;
+      --muted: #94a3b8;
+      --card-line: #e5e7eb;
+      --grid: #eef2f7;
+      --nav: #111827;
+      --confirmed: #6366f1;
+      --suspected: #f59e0b;
+      --mortality: #111827;
+      --growth: #ff4665;
+      --daily: #cbd5e1;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.08), 0 1px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 20px 32px 6px;
+    }
+
+    .brand {
+      display: block;
+      width: 260px;
+      height: 70px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .brand img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      color: var(--nav);
+      font-size: 15px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    nav a:hover,
+    nav a[aria-current="page"] {
+      color: var(--confirmed);
+    }
+
+    main {
+      padding: 20px 32px 44px;
+    }
+
+    .charts {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      width: min(100%, 1500px);
+      margin: 0 auto;
+    }
+
+    .chart-card {
+      min-width: 0;
+      border: 1px solid var(--card-line);
+      border-radius: 22px;
+      padding: 34px 36px 34px;
+      box-shadow: var(--shadow);
+      background: #fff;
+    }
+
+    .chart-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 22px;
+    }
+
+    .chart-title {
+      margin: 0;
+      color: var(--fg);
+      font-size: clamp(22px, 1.8vw, 28px);
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .title-icon {
+      color: var(--mortality);
+      display: inline-flex;
+      width: 22px;
+      height: 22px;
+      line-height: 1;
+    }
+
+    .title-icon svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+    }
+
+    .title-mark {
+      width: 5px;
+      height: 26px;
+      border-radius: 999px;
+      background: var(--confirmed);
+    }
+
+    .chart {
+      width: 100%;
+    }
+
+    .status {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: hidden;
+    }
+
+    .axis {
+      stroke: #9aa9bf;
+      stroke-width: 1.6;
+    }
+
+    .grid {
+      stroke: var(--grid);
+      stroke-width: 1;
+      stroke-dasharray: 4 5;
+    }
+
+    .series-line {
+      fill: none;
+      stroke-width: 3.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .daily-line {
+      fill: none;
+      stroke: var(--daily);
+      stroke-width: 3;
+      stroke-dasharray: 5 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .bar {
+      fill: var(--mortality);
+      rx: 3;
+    }
+
+    .tick-label {
+      fill: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 22px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .legend.top {
+      justify-content: flex-end;
+      margin: 0 0 12px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+    }
+
+    .legend-solid {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    @media (max-width: 760px) {
+      .site-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 18px 18px 4px;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+
+      main {
+        padding: 18px;
+      }
+
+      .chart-card {
+        border-radius: 16px;
+        padding: 22px 16px 24px;
+      }
+
+      .brand {
+        width: 230px;
+        height: 62px;
+      }
+
+      .tick-label {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Furious Doctors">
+      <img src="public/assets/brand/furious-doctors-logo-whitebg.jpg" alt="Furious Doctors">
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="index.html">DRC Ebola</a>
+      <a href="bangladesh-measles.html" aria-current="page">Bangladesh measles</a>
+      <a href="https://furiousdoctors.substack.com/subscribe">Subscribe</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="charts" id="charts">
+      <p class="status">Loading Bangladesh measles trends...</p>
+    </div>
+  </main>
+
+  <script>
+    const DATA_URL = "public/assets/measles/national_timeseries.json";
+    const chartsEl = document.getElementById("charts");
+
+    function movingAverage(rows, key, windowSize) {
+      return rows.map((row, index) => {
+        if (index < windowSize - 1) return null;
+        let sum = 0;
+        for (let i = index - windowSize + 1; i <= index; i += 1) {
+          sum += rows[i][key];
+        }
+        return { date: row.date, value: sum / windowSize };
+      });
+    }
+
+    function dailyGrowthRate(rows, key) {
+      return rows.map((row, index) => {
+        if (index === 0 || rows[index - 1][key] === 0) return null;
+        return {
+          date: row.date,
+          value: ((row[key] - rows[index - 1][key]) / rows[index - 1][key]) * 100
+        };
+      });
+    }
+
+    function formatDate(date) {
+      const parsed = new Date(`${date}T00:00:00`);
+      return parsed.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    }
+
+    function evenlySpacedTicks(rows, count) {
+      const ticks = [];
+      const maxIndex = rows.length - 1;
+      for (let i = 0; i < count; i += 1) {
+        const index = Math.round((maxIndex * i) / (count - 1));
+        if (!ticks.some((tick) => tick.index === index)) {
+          ticks.push({ index, label: formatDate(rows[index].date) });
+        }
+      }
+      return ticks;
+    }
+
+    function numberLabel(value, percent = false) {
+      if (percent) return `${Math.round(value)}%`;
+      if (Math.abs(value) >= 1000) return Math.round(value).toLocaleString("en-US");
+      return Math.round(value).toString();
+    }
+
+    function pointsToPath(points) {
+      return points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" ");
+    }
+
+    function lineSeries(rows, key) {
+      return rows.map((row) => ({ date: row.date, value: row[key] }));
+    }
+
+    function makeScale(rows, seriesList, options = {}) {
+      const width = 1280;
+      const height = 360;
+      const margin = { top: 10, right: 76, bottom: 48, left: 64 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+      const values = seriesList
+        .flatMap((series) => series.map((item) => item && item.value))
+        .filter((value) => Number.isFinite(value));
+      let minValue = options.min ?? Math.min(...values);
+      let maxValue = options.max ?? Math.max(...values);
+
+      if (minValue === maxValue) {
+        minValue -= 1;
+        maxValue += 1;
+      }
+
+      const padding = (maxValue - minValue) * 0.04;
+      minValue = options.min === undefined ? minValue - padding : minValue;
+      maxValue = options.max === undefined ? maxValue + padding : maxValue + padding;
+
+      return {
+        width,
+        height,
+        margin,
+        innerWidth,
+        innerHeight,
+        minValue,
+        maxValue,
+        x(index) {
+          return margin.left + (index / Math.max(rows.length - 1, 1)) * innerWidth;
+        },
+        y(value) {
+          return margin.top + ((maxValue - value) / (maxValue - minValue)) * innerHeight;
+        }
+      };
+    }
+
+    function renderAxes(rows, scale, yTicks, options = {}) {
+      const xTicks = evenlySpacedTicks(rows, options.xTickCount || 12);
+      const yLabels = yTicks.map((tick) => {
+        const y = scale.y(tick);
+        return `
+          <line class="grid" x1="${scale.margin.left}" y1="${y}" x2="${scale.width - scale.margin.right}" y2="${y}"></line>
+          <text class="tick-label" x="${scale.margin.left - 10}" y="${y + 5}" text-anchor="end">${numberLabel(tick, options.percent)}</text>
+        `;
+      }).join("");
+      const xLabels = xTicks.map((tick) => {
+        const x = scale.x(tick.index);
+        const maxIndex = rows.length - 1;
+        const anchor = tick.index === 0 ? "start" : tick.index === maxIndex ? "end" : "middle";
+        return `<text class="tick-label" x="${x}" y="${scale.height - 8}" text-anchor="${anchor}">${tick.label}</text>`;
+      }).join("");
+
+      return `
+        ${yLabels}
+        <line class="axis" x1="${scale.margin.left}" y1="${scale.margin.top}" x2="${scale.margin.left}" y2="${scale.height - scale.margin.bottom}"></line>
+        <line class="axis" x1="${scale.margin.left}" y1="${scale.height - scale.margin.bottom}" x2="${scale.width - scale.margin.right}" y2="${scale.height - scale.margin.bottom}"></line>
+        ${xLabels}
+      `;
+    }
+
+    function pathForSeries(series, scale) {
+      const points = series
+        .map((item, index) => item && Number.isFinite(item.value) ? { x: scale.x(index), y: scale.y(item.value) } : null)
+        .filter(Boolean);
+      return pointsToPath(points);
+    }
+
+    function renderCard(id, title, body, options = {}) {
+      return `
+        <section class="chart-card" id="${id}">
+          <div class="chart-title-row">
+            ${options.icon ? `<span class="title-icon" aria-hidden="true">${options.icon}</span>` : ""}
+            ${options.mark ? `<span class="title-mark" aria-hidden="true"></span>` : ""}
+            <h2 class="chart-title">${title}</h2>
+          </div>
+          ${body}
+        </section>
+      `;
+    }
+
+    function renderDiseaseTrends(rows) {
+      const suspected = lineSeries(rows, "suspected");
+      const confirmed = lineSeries(rows, "confirmed");
+      const scale = makeScale(rows, [suspected, confirmed], { min: 0, max: 1400 });
+      const svg = `
+        <div class="chart">
+          <svg viewBox="0 0 ${scale.width} ${scale.height}" role="img" aria-label="Disease trends">
+            ${renderAxes(rows, scale, [0, 350, 700, 1050, 1400], { xTickCount: 14 })}
+            <path class="series-line" stroke="var(--confirmed)" d="${pathForSeries(confirmed, scale)}"></path>
+            <path class="series-line" stroke="var(--suspected)" d="${pathForSeries(suspected, scale)}"></path>
+          </svg>
+          <div class="legend">
+            <span class="legend-item" style="color: var(--confirmed)"><span class="legend-dot"></span>Confirmed Cases</span>
+            <span class="legend-item" style="color: var(--suspected)"><span class="legend-dot"></span>Suspected Cases</span>
+          </div>
+        </div>
+      `;
+      return renderCard("diseaseTrend", "Disease Trends", svg);
+    }
+
+    function renderMortality(rows) {
+      const deaths = lineSeries(rows, "deaths");
+      const scale = makeScale(rows, [deaths], { min: 0, max: 20 });
+      const barWidth = Math.max(3, (scale.innerWidth / rows.length) * 0.58);
+      const bars = deaths.map((item, index) => {
+        const x = scale.x(index) - barWidth / 2;
+        const y = scale.y(item.value);
+        const h = scale.height - scale.margin.bottom - y;
+        return `<rect class="bar" x="${x}" y="${y}" width="${barWidth}" height="${Math.max(h, 1)}"></rect>`;
+      }).join("");
+      const svg = `
+        <div class="chart">
+          <svg viewBox="0 0 ${scale.width} ${scale.height}" role="img" aria-label="Mortality">
+            ${renderAxes(rows, scale, [0, 5, 10, 15, 20], { xTickCount: 13 })}
+            ${bars}
+          </svg>
+        </div>
+      `;
+      const skullIcon = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-2a2 2 0 0 0 1.6-3.2A8 8 0 1 0 7.4 16.8 2 2 0 0 0 9 20v2"></path><path d="M9 22h6"></path><circle cx="9" cy="12" r="1"></circle><circle cx="15" cy="12" r="1"></circle><path d="m12.5 17-.5-1-.5 1"></path></svg>`;
+      return renderCard("mortality", "Mortality", svg, { icon: skullIcon });
+    }
+
+    function renderGrowthRate(rows) {
+      const growth = dailyGrowthRate(rows, "confirmed");
+      const scale = makeScale(rows, [growth], { min: -200, max: 600 });
+      const svg = `
+        <div class="chart">
+          <svg viewBox="0 0 ${scale.width} ${scale.height}" role="img" aria-label="Growth rate">
+            ${renderAxes(rows, scale, [-200, 0, 200, 400, 600], { percent: true, xTickCount: 13 })}
+            <path class="series-line" stroke="var(--growth)" d="${pathForSeries(growth, scale)}"></path>
+          </svg>
+        </div>
+      `;
+      return renderCard("growthRate", "Growth Rate", svg);
+    }
+
+    function renderMovingAverage(rows) {
+      const confirmed = lineSeries(rows, "confirmed");
+      const average = movingAverage(rows, "confirmed", 7);
+      const scale = makeScale(rows, [confirmed, average], { min: 0, max: 380 });
+      const svg = `
+        <div class="legend top">
+          <span class="legend-item" style="color: var(--daily)"><span class="legend-solid"></span>Daily Cases</span>
+          <span class="legend-item" style="color: var(--confirmed)"><span class="legend-solid"></span>Moving Average (7-day)</span>
+        </div>
+        <div class="chart">
+          <svg viewBox="0 0 ${scale.width} ${scale.height}" role="img" aria-label="Moving average 7-day">
+            ${renderAxes(rows, scale, [0, 95, 190, 285, 380], { xTickCount: 12 })}
+            <path class="daily-line" d="${pathForSeries(confirmed, scale)}"></path>
+            <path class="series-line" stroke="var(--confirmed)" d="${pathForSeries(average, scale)}"></path>
+          </svg>
+        </div>
+      `;
+      return renderCard("movingAverage", "Moving Average (7-day)", svg, { mark: true });
+    }
+
+    async function init() {
+      const response = await fetch(DATA_URL);
+      if (!response.ok) throw new Error(`Could not load ${DATA_URL}`);
+      const rows = await response.json();
+
+      chartsEl.innerHTML = [
+        renderDiseaseTrends(rows),
+        renderMortality(rows),
+        renderGrowthRate(rows),
+        renderMovingAverage(rows)
+      ].join("");
+    }
+
+    init().catch((error) => {
+      chartsEl.innerHTML = `<p class="status">Could not load Bangladesh measles data.</p>`;
+      console.error(error);
+    });
+  </script>
+</body>
+</html>

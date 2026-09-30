@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>2026 Ebola outbreak trajectory in DRC</title>
+  <title>Furious Doctors</title>
   <style>
     :root {
       color-scheme: light;
-      --bg: #f6f3ee;
+      --bg: #ffffff;
       --fg: #171717;
       --muted: #5a5a5a;
       --red: #d63a2e;
@@ -25,8 +25,52 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 24px 42px 0;
+    }
+
+    .brand {
+      display: block;
+      width: 260px;
+      height: 70px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .brand img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      color: var(--fg);
+      font-size: 15px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    nav a:hover,
+    nav a[aria-current="page"] {
+      color: var(--red);
+    }
+
     main {
-      min-height: 100vh;
+      min-height: calc(100vh - 64px);
       padding: 46px 42px 54px;
     }
 
@@ -56,14 +100,6 @@
       display: block;
       width: 100%;
       height: auto;
-    }
-
-    .section-label {
-      margin: 0;
-      color: var(--muted);
-      font-size: 16px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
     }
 
     .animation-header {
@@ -101,18 +137,44 @@
     }
 
     @media (max-width: 760px) {
+      .site-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 20px 18px 0;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+
       main {
-        padding: 24px 18px 38px;
+        padding: 30px 18px 38px;
       }
 
       .animation-header {
         align-items: flex-start;
         flex-direction: column;
       }
+
+      .brand {
+        width: 230px;
+        height: 62px;
+      }
     }
   </style>
 </head>
 <body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Furious Doctors">
+      <img src="public/assets/brand/furious-doctors-logo-whitebg.jpg" alt="Furious Doctors">
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="index.html" aria-current="page">DRC Ebola</a>
+      <a href="bangladesh-measles.html">Bangladesh measles</a>
+      <a href="https://furiousdoctors.substack.com/subscribe">Subscribe</a>
+    </nav>
+  </header>
+
   <main>
     <h1>2026 Ebola outbreak trajectory in DRC</h1>
 
@@ -128,11 +190,11 @@
         <source src="public/assets/bundibugyo/bundibugyo_full_65_days_1080p.mp4?v=20260922-sitrep131" type="video/mp4">
       </video>
     </div>
-
     <footer>
       Sources: DRC/INSP SitRep PDFs from https://insp.cd/sitrep-n056-mvb_09-07-2026/; 2014 comparison from https://raw.githubusercontent.com/cmrivers/ebola/master/country_timeseries.csv; 2018 comparison from https://www.who.int/emergencies/disease-outbreak-news/item/2019-DON168 and earlier WHO Disease Outbreak News snapshots. Latest local extraction: SitRep 131, September 22, 2026, 7,820 confirmed DRC cases.
     </footer>
   </main>
+
   <script>
     const video = document.getElementById("outbreakVideo");
     const playButton = document.getElementById("playButton");
