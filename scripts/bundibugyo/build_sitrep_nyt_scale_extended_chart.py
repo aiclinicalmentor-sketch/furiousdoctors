@@ -20,6 +20,19 @@ DECLARATION_DATE = date(2026, 5, 15)
 
 def read_rows():
     rows = []
+    if OUT_CSV.exists():
+        with OUT_CSV.open("r", encoding="utf-8", newline="") as handle:
+            for row in csv.DictReader(handle):
+                report_date = datetime.fromisoformat(row["report_date"]).date()
+                rows.append(
+                    {
+                        "report_date": report_date,
+                        "days_after_declaration": int(row["days_after_declaration"]),
+                        "sitrep": row["sitrep"],
+                        "cases": int(row["cumulative_confirmed_cases"]),
+                        "source_file": row["source_file"],
+                    }
+                )
     with IN_CSV.open("r", encoding="utf-8", newline="") as handle:
         for row in csv.DictReader(handle):
             report_date = datetime.fromisoformat(row["report_date"]).date()
@@ -32,7 +45,18 @@ def read_rows():
                     "source_file": row["source_file"],
                 }
             )
-    return rows
+    selected = {}
+    for row in rows:
+        key = row["report_date"]
+        current = selected.get(key)
+        if current is None:
+            selected[key] = row
+            continue
+        row_sitrep = int(row["sitrep"]) if row["sitrep"] else -1
+        current_sitrep = int(current["sitrep"]) if current["sitrep"] else -1
+        if (row_sitrep, row["cases"], row["source_file"]) > (current_sitrep, current["cases"], current["source_file"]):
+            selected[key] = row
+    return [selected[key] for key in sorted(selected)]
 
 
 def write_csv(rows):

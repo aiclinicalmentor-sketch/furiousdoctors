@@ -10,26 +10,43 @@ import matplotlib.pyplot as plt
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 WORK_DIR = REPO_ROOT / ".bundibugyo_work"
+PUBLIC_ASSETS = REPO_ROOT / "public" / "assets" / "bundibugyo"
 IN_CSV = WORK_DIR / "sitrep_cumulative_cases.csv"
 OUT_CSV = WORK_DIR / "sitrep_cumulative_cases_by_date.csv"
 OUT_PNG = WORK_DIR / "sitrep_cumulative_cases_by_date.png"
+PUBLIC_CSV = PUBLIC_ASSETS / "sitrep_cumulative_cases_nyt_scale_extended.csv"
 
 
 def read_rows():
     rows = []
-    with IN_CSV.open("r", encoding="utf-8", newline="") as handle:
-        for row in csv.DictReader(handle):
-            if not row["report_date"] or not row["cumulative_confirmed_cases"]:
-                continue
-            rows.append(
-                {
-                    "report_date": datetime.fromisoformat(row["report_date"]).date(),
-                    "sitrep": int(row["sitrep"]) if row["sitrep"] else -1,
-                    "cases": int(row["cumulative_confirmed_cases"]),
-                    "file": row["file"],
-                    "method": row["method"],
-                }
-            )
+    if PUBLIC_CSV.exists():
+        with PUBLIC_CSV.open("r", encoding="utf-8", newline="") as handle:
+            for row in csv.DictReader(handle):
+                if not row["report_date"] or not row["cumulative_confirmed_cases"]:
+                    continue
+                rows.append(
+                    {
+                        "report_date": datetime.fromisoformat(row["report_date"]).date(),
+                        "sitrep": int(row["sitrep"]) if row["sitrep"] else -1,
+                        "cases": int(row["cumulative_confirmed_cases"]),
+                        "file": row["source_file"],
+                        "method": "existing_public_csv",
+                    }
+                )
+    if IN_CSV.exists():
+        with IN_CSV.open("r", encoding="utf-8", newline="") as handle:
+            for row in csv.DictReader(handle):
+                if not row["report_date"] or not row["cumulative_confirmed_cases"]:
+                    continue
+                rows.append(
+                    {
+                        "report_date": datetime.fromisoformat(row["report_date"]).date(),
+                        "sitrep": int(row["sitrep"]) if row["sitrep"] else -1,
+                        "cases": int(row["cumulative_confirmed_cases"]),
+                        "file": row["file"],
+                        "method": row["method"],
+                    }
+                )
     return rows
 
 

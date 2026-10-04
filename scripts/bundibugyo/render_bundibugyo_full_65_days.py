@@ -21,7 +21,7 @@ HEIGHT = 1080
 FPS = 30
 DRAW_SECONDS = 18
 HOLD_SECONDS = 5
-X_MAX = 100
+X_MAX = 200
 VIEW_HEIGHT = 800
 START_PAN_DAY = 25
 
@@ -113,6 +113,12 @@ def main():
     current = read_current()
     if not current:
         raise RuntimeError("No current outbreak data found")
+    if current[0]["day"] > 5:
+        raise RuntimeError(
+            "Current outbreak data starts at day "
+            f"{current[0]['day']}; expected early SitReps. "
+            "Run the paginated SitRep downloader before rendering."
+        )
     global latest_day
     latest_day = current[-1]["day"]
 
@@ -151,7 +157,7 @@ def main():
             ax.set_facecolor(BG)
             ax.set_xlim(0, X_MAX)
             ax.set_ylim(y_min, y_max)
-            ax.set_xticks([0, 25, 50, 75, 100])
+            ax.set_xticks([0, 50, 100, 150, 200])
             y_tick_start = int((y_min // 200) * 200)
             ax.set_yticks([v for v in range(y_tick_start, int(y_max) + 201, 200) if y_min <= v <= y_max])
             ax.tick_params(axis="both", colors=FG, labelsize=24, length=0, width=0)
@@ -169,17 +175,17 @@ def main():
                     label_x, label_y = visible[-1]
                     if label == "2014 West Africa outbreak":
                         ax.text(
-                            86,
+                            158,
                             690,
                             "2014 West Africa outbreak",
                             color=MUTED,
                             fontsize=23,
-                            ha="right",
+                            ha="left",
                             va="top",
                         )
                     else:
                         ax.text(
-                            min(label_x + 2, 99),
+                            min(label_x + 4, X_MAX - 8),
                             label_y - 120,
                             "2018 Congo outbreak",
                             color=MUTED,
@@ -191,7 +197,7 @@ def main():
             ax.plot(x, y, color=RED, linewidth=6.5, solid_capstyle="round", solid_joinstyle="round")
             ax.scatter([x[-1]], [y[-1]], s=175, color=RED, zorder=5)
 
-            label_x = min(x[-1] + 3.0, 78)
+            label_x = min(x[-1] + 4.0, X_MAX - 58)
             label_y = min(cases + 58, y_max - 55)
             ax.text(
                 label_x,

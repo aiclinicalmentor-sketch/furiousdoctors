@@ -1,6 +1,7 @@
 import base64
 import html
 import json
+import os
 import re
 from pathlib import Path
 from urllib.parse import quote, unquote, urlparse, urlunparse
@@ -61,18 +62,46 @@ def filename_from_url(url):
     return re.sub(r'[<>:"/\\|?*]', "_", name)
 
 
+def sitrep_number(value):
+    match = re.search(r"(?:sitrep|^|[_\-\s])n?[°º]?\s*0*([0-9]{1,3})(?:\D|$)", value, re.IGNORECASE)
+    if match:
+        return int(match.group(1))
+    return None
+
+
+def fetch_posts():
+    posts = []
+    page = 1
+    while True:
+        batch = fetch_json(f"{API_URL}&page={page}")
+        if not batch:
+            break
+        posts.extend(batch)
+        if len(batch) < 100:
+            break
+        page += 1
+    return posts
+
+
 def main():
     PDF_DIR.mkdir(parents=True, exist_ok=True)
-    posts = fetch_json(API_URL)
+    posts = fetch_posts()
+    after_sitrep = int(os.environ.get("BUNDIBUGYO_AFTER_SITREP") or "0")
     downloaded = []
     skipped = []
     failed = []
 
     for post in posts:
         title = html.unescape(post.get("title", {}).get("rendered", "")).strip()
+        title_sitrep = sitrep_number(title)
+        if after_sitrep and title_sitrep is not None and title_sitrep <= after_sitrep:
+            break
         content = post.get("content", {}).get("rendered", "")
         for url in pdf_urls_from_content(content):
             filename = filename_from_url(url)
+            file_sitrep = sitrep_number(filename)
+            if after_sitrep and file_sitrep is not None and file_sitrep <= after_sitrep:
+                continue
             target = PDF_DIR / filename
             record = {"title": title, "post": post.get("link"), "pdf": url, "file": filename}
             if target.exists() and target.stat().st_size > 0:
@@ -90,6 +119,7 @@ def main():
 
     manifest = {
         "source_api": API_URL,
+        "after_sitrep": after_sitrep,
         "downloaded": downloaded,
         "skipped_existing": skipped,
         "failed": failed,
