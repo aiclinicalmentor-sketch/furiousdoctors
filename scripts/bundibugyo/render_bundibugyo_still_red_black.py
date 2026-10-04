@@ -15,9 +15,9 @@ OUT_PNG = PUBLIC_ASSETS / "bundibugyo_still_red_black_1080p.png"
 
 WIDTH = 1920
 HEIGHT = 1080
-X_MAX = 200
+X_MAX = 250
 
-BG = "#F6F3EE"
+BG = "#FFFFFF"
 RED = "#D63A2E"
 FG = "#171717"
 MUTED = "#5A5A5A"
@@ -62,7 +62,7 @@ def main():
     ax.spines["right"].set_visible(False)
 
     ax.set_xlim(0, X_MAX)
-    ax.set_xticks([0, 50, 100, 150, 200])
+    ax.set_xticks([0, 50, 100, 150, 200, 250])
     ax.tick_params(axis="both", colors=FG, labelsize=24, length=7, width=1.2)
     ax.grid(axis="y", color=GRID, linewidth=1.2)
     ax.grid(axis="x", visible=False)
@@ -74,14 +74,21 @@ def main():
         if label == "2014 West Africa outbreak":
             ax.text(158, 2180, "2014 West Africa outbreak", color=MUTED, fontsize=24, ha="left", va="top", linespacing=1.35)
         else:
-            ax.text(158, 430, "2018 Congo outbreak", color=MUTED, fontsize=24, ha="left", va="top", linespacing=1.35)
+            ax.text(158, 450, "2018 Congo outbreak", color=MUTED, fontsize=24, ha="left", va="top", linespacing=1.35)
 
     x = [p[0] for p in current]
     y = [p[1] for p in current]
-    y_max = max(2600, int(math.ceil(max(y) / 400) * 400))
+    comparison_y_max = max(
+        cases
+        for pts in comparisons.values()
+        for day, cases in pts
+        if day <= X_MAX + 5
+    )
+    y_max = max(2600, int(math.ceil(max(max(y), comparison_y_max) / 400) * 400))
 
     ax.set_ylim(0, y_max)
-    ax.set_yticks(range(0, y_max + 1, 400))
+    y_tick_step = 2000 if y_max > 10000 else 400
+    ax.set_yticks(range(0, y_max + 1, y_tick_step))
     ax.plot(x, y, color=RED, linewidth=8.5, solid_capstyle="round", solid_joinstyle="round")
     ax.scatter([x[-1]], [y[-1]], s=175, color=RED, zorder=6)
     label_x = min(x[-1] + 8, X_MAX - 70)

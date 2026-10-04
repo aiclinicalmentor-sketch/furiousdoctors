@@ -21,11 +21,11 @@ HEIGHT = 1080
 FPS = 30
 DRAW_SECONDS = 18
 HOLD_SECONDS = 5
-X_MAX = 200
+X_MAX = 250
 VIEW_HEIGHT = 800
 START_PAN_DAY = 25
 
-BG = "#F6F3EE"
+BG = "#FFFFFF"
 FG = "#171717"
 RED = "#D63A2E"
 MUTED = "#5A5A5A"
@@ -80,6 +80,19 @@ def trim_points(points, day):
     if not out or out[-1]["day"] < day:
         out.append({"day": day, "cases": interp(points, day), "date": "", "sitrep": ""})
     return out
+
+
+def x_for_y(points, target_y):
+    for left, right in zip(points, points[1:]):
+        y0 = left[1]
+        y1 = right[1]
+        if min(y0, y1) <= target_y <= max(y0, y1):
+            span = y1 - y0
+            if span == 0:
+                return left[0]
+            t = (target_y - y0) / span
+            return left[0] + (right[0] - left[0]) * t
+    return None
 
 
 def ease_in_out(t):
@@ -157,7 +170,7 @@ def main():
             ax.set_facecolor(BG)
             ax.set_xlim(0, X_MAX)
             ax.set_ylim(y_min, y_max)
-            ax.set_xticks([0, 50, 100, 150, 200])
+            ax.set_xticks([0, 50, 100, 150, 200, 250])
             y_tick_start = int((y_min // 200) * 200)
             ax.set_yticks([v for v in range(y_tick_start, int(y_max) + 201, 200) if y_min <= v <= y_max])
             ax.tick_params(axis="both", colors=FG, labelsize=24, length=0, width=0)
@@ -170,29 +183,33 @@ def main():
                 cx = [p[0] for p in pts]
                 cy = [p[1] for p in pts]
                 ax.plot(cx, cy, color=COMPARE, linewidth=2.3, alpha=0.55)
-                visible = [p for p in pts if p[0] <= X_MAX and y_min <= p[1] <= y_max]
-                if visible:
-                    label_x, label_y = visible[-1]
-                    if label == "2014 West Africa outbreak":
+                if label == "2014 West Africa outbreak":
+                    label_y = y_min + (VIEW_HEIGHT * 0.72)
+                    label_x = x_for_y(pts, label_y)
+                    if label_x is not None and 0 <= label_x <= X_MAX:
                         ax.text(
-                            158,
-                            690,
+                            min(label_x + 8, X_MAX - 6),
+                            label_y - 220,
                             "2014 West Africa outbreak",
                             color=MUTED,
                             fontsize=23,
-                            ha="left",
-                            va="top",
-                        )
-                    else:
-                        ax.text(
-                            min(label_x + 4, X_MAX - 8),
-                            label_y - 120,
-                            "2018 Congo outbreak",
-                            color=MUTED,
-                            fontsize=23,
                             ha="right",
-                            va="top",
+                            va="center",
                         )
+                    continue
+
+                visible = [p for p in pts if p[0] <= X_MAX and y_min <= p[1] <= y_max]
+                if visible:
+                    label_x, label_y = visible[-1]
+                    ax.text(
+                        min(label_x + 4, X_MAX - 8),
+                        label_y - 120,
+                        "2018 Congo outbreak",
+                        color=MUTED,
+                        fontsize=23,
+                        ha="right",
+                        va="top",
+                    )
 
             ax.plot(x, y, color=RED, linewidth=6.5, solid_capstyle="round", solid_joinstyle="round")
             ax.scatter([x[-1]], [y[-1]], s=175, color=RED, zorder=5)
