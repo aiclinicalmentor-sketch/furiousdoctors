@@ -72,9 +72,9 @@ def main():
         cy = [p[1] for p in pts]
         ax.plot(cx, cy, color=COMPARE, linewidth=2.6, alpha=0.72)
         if label == "2014 West Africa outbreak":
-            ax.text(158, 2180, "2014 West Africa outbreak", color=MUTED, fontsize=24, ha="left", va="top", linespacing=1.35)
+            ax.text(158, 3300, "2014 West Africa outbreak", color=MUTED, fontsize=24, ha="left", va="top", linespacing=1.35)
         else:
-            ax.text(158, 450, "2018 Congo outbreak", color=MUTED, fontsize=24, ha="left", va="top", linespacing=1.35)
+            ax.text(158, 1550, "2018 Congo outbreak", color=MUTED, fontsize=24, ha="left", va="top", linespacing=1.35)
 
     x = [p[0] for p in current]
     y = [p[1] for p in current]
@@ -105,8 +105,8 @@ def main():
     )
     ax.text(
         label_x,
-        label_y - 92,
-        f"Day {x[-1]} after declaration",
+        label_y - 700,
+        f"Day {x[-1]}",
         color=MUTED,
         fontsize=23,
         ha="left",
