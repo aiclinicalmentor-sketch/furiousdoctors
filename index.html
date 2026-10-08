@@ -81,6 +81,53 @@
       padding: 20px 32px 44px;
     }
 
+    .animation-panel {
+      width: min(100%, 1500px);
+      margin: 0 auto 28px;
+    }
+
+    .animation-header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 18px;
+      margin: 0 0 12px;
+    }
+
+    .play-button {
+      appearance: none;
+      border: 2px solid var(--fg);
+      background: transparent;
+      color: var(--fg);
+      border-radius: 0;
+      padding: 10px 18px;
+      min-width: 158px;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .play-button:hover {
+      border-color: var(--confirmed);
+      color: var(--confirmed);
+    }
+
+    .video-wrap {
+      width: 100%;
+      border: 1px solid var(--card-line);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      background: #fff;
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
     .charts {
       display: grid;
       grid-template-columns: 1fr;
@@ -243,6 +290,16 @@
         padding: 18px;
       }
 
+      .animation-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .video-wrap {
+        border-radius: 16px;
+        padding: 10px;
+      }
+
       .chart-card {
         border-radius: 16px;
         padding: 22px 16px 24px;
@@ -272,6 +329,17 @@
   </header>
 
   <main>
+    <section class="animation-panel" aria-label="Bangladesh cumulative measles cases animation">
+      <div class="animation-header">
+        <button class="play-button" type="button" id="playButton" aria-controls="measlesAnimationVideo">Play animation</button>
+      </div>
+      <div class="video-wrap">
+        <video id="measlesAnimationVideo" playsinline preload="metadata" poster="public/assets/measles/bangladesh_measles_cumulative_still_1080p.png?v=20261007">
+          <source src="public/assets/measles/bangladesh_measles_cumulative_1080p.mp4?v=20261007" type="video/mp4">
+        </video>
+      </div>
+    </section>
+
     <div class="charts" id="charts">
       <p class="status">Loading Bangladesh measles trends...</p>
     </div>
@@ -280,6 +348,24 @@
   <script>
     const DATA_URL = "public/assets/measles/national_timeseries.json";
     const chartsEl = document.getElementById("charts");
+    const video = document.getElementById("measlesAnimationVideo");
+    const playButton = document.getElementById("playButton");
+
+    function syncPlayButton() {
+      playButton.textContent = video.paused ? "Play animation" : "Pause animation";
+    }
+
+    playButton.addEventListener("click", () => {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    });
+
+    video.addEventListener("play", syncPlayButton);
+    video.addEventListener("pause", syncPlayButton);
+    video.addEventListener("ended", syncPlayButton);
 
     function movingAverage(rows, key, windowSize) {
       return rows.map((row, index) => {
