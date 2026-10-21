@@ -315,6 +315,8 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="public/assets/navigation.css">
+  <script src="public/assets/navigation.js" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -322,7 +324,13 @@
       <img src="public/assets/brand/furious-doctors-logo-whitebg.jpg" alt="Furious Doctors">
     </a>
     <nav aria-label="Main navigation">
-      <a href="drc-ebola.html">DRC Ebola</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="drc-ebola-menu">DRC Ebola</button>
+        <div class="nav-dropdown-menu" id="drc-ebola-menu" hidden>
+          <a href="drc-ebola.html">Outbreak trajectory</a>
+          <a href="dr-sheik-humarr-khan.html">Dr. Sheik Humarr Khan</a>
+        </div>
+      </div>
       <a href="index.html" aria-current="page">Bangladesh measles</a>
       <a href="https://furiousdoctors.substack.com/subscribe">Subscribe</a>
     </nav>
