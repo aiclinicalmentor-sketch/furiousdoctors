@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-10-19T18:56:35Z",
-  "latest_report_date": "2026-10-17",
-  "latest_days_after_declaration": 155,
-  "latest_sitrep": "156",
-  "latest_cumulative_confirmed_cases": 9455,
-  "latest_source_file": "SitRep_MVEBDB_156_17_10_2026.pdf",
+  "updated_at": "2026-10-29T18:45:58Z",
+  "latest_report_date": "2026-10-25",
+  "latest_days_after_declaration": 163,
+  "latest_sitrep": "164",
+  "latest_cumulative_confirmed_cases": 10060,
+  "latest_source_file": "SitRep_MVEBDB_164_25_10_2026.pdf",
   "website_index_updated": true
 }
